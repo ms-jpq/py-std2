@@ -31,7 +31,9 @@ from typing import (
     Sequence,
     Set,
     Tuple,
+    Type,
     Union,
+    cast,
 )
 
 _MAPS_M = {MutableMapping, ABC_MutableMapping, Dict, dict}
@@ -50,7 +52,7 @@ def _pprn(thingy: Any) -> str:
     if is_dataclass(thingy):
         fs = sorted(fields(thingy), key=lambda f: strxfrm(f.name))
         listed = ", ".join(map(_pprn, fs))
-        return f"key of <{thingy.__qualname__}> :: {{ {listed} }}"
+        return f"key of <{cast(Type[Any], thingy).__qualname__}> :: {{ {listed} }}"
     elif isinstance(thingy, Field):
         return f"{thingy.name}: {thingy.type}"
     elif isclass(thingy) and issubclass(thingy, Enum):
@@ -90,12 +92,10 @@ class _BaseError(Exception):
         return (linesep * 2).join((l0, l1, l2, l3, l4, l5))
 
 
-class EncodeError(_BaseError):
-    ...
+class EncodeError(_BaseError): ...
 
 
-class DecodeError(_BaseError):
-    ...
+class DecodeError(_BaseError): ...
 
 
 EStep = Tuple[Literal[False, True], Union[EncodeError, Any]]
@@ -105,8 +105,7 @@ EParser = Callable[[Any], EStep]
 class Encoder(Protocol):
     def __call__(
         self, tp: Any, path: Sequence[Any], encoders: Sequence[Encoder]
-    ) -> Optional[EParser]:
-        ...
+    ) -> Optional[EParser]: ...
 
 
 DStep = Tuple[Literal[False, True], Union[DecodeError, Any]]
@@ -116,5 +115,4 @@ DParser = Callable[[Any], DStep]
 class Decoder(Protocol):
     def __call__(
         self, tp: Any, path: Sequence[Any], strict: bool, decoders: Sequence[Decoder]
-    ) -> Optional[DParser]:
-        ...
+    ) -> Optional[DParser]: ...

@@ -239,7 +239,7 @@ def _new_parser(
                                 path=(*path, tp), actual=x, extra_keys=ek
                             )
 
-                    return True, tp(**kwargs)
+                    return True, cast(Any, tp)(**kwargs)
 
             return p
 

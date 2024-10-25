@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from collections.abc import ByteString
 from typing import Any, Callable, Final, Iterable, NoReturn, Protocol, TypeVar, Union
 
 _T = TypeVar("_T")

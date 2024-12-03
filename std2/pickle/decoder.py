@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from collections.abc import Mapping
 from dataclasses import MISSING, fields, is_dataclass
 from enum import Enum
@@ -24,6 +25,12 @@ from typing import (
 from ..types import is_iterable_not_str
 from .coders import DEFAULT_DECODERS
 from .types import MAPS, PRIMITIVES, SEQS, SETS, DecodeError, Decoder, DParser, DStep
+
+if sys.version_info >= (3, 10):
+    from types import UnionType
+else:
+    UnionType = object()
+
 
 _T = TypeVar("_T")
 
@@ -61,7 +68,7 @@ def _new_parser(
 
             return p
 
-        elif origin is Union:
+        elif origin is Union or origin is UnionType:
             ps = tuple(
                 _new_parser(a, path=path, strict=strict, decoders=decoders)
                 for a in args
@@ -184,6 +191,7 @@ def _new_parser(
             return p
 
         elif origin and args:
+            print(origin, args)
             raise ValueError(f"Unexpected type -- {tp}")
 
         elif isclass(tp) and issubclass(tp, Enum):

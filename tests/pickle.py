@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
@@ -370,3 +371,12 @@ class Coders(TestCase):
         t1 = p1(t0)
         t2 = p2(t1)
         self.assertEqual(t2, t0.replace(tzinfo=timezone.utc))
+
+
+if sys.version_info >= (3, 10):
+
+    class UnionType(TestCase):
+        def test_1(self) -> None:
+            p = new_decoder[str | None](str | None)
+            thing = p("a")
+            self.assertEqual(thing, "a")

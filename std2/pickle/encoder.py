@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Mapping
 from dataclasses import MISSING, fields, is_dataclass
 from enum import Enum
@@ -22,6 +23,12 @@ from typing import (
 from ..types import is_iterable_not_str
 from .coders import DEFAULT_ENCODERS
 from .types import MAPS, PRIMITIVES, SEQS, SETS, EncodeError, Encoder, EParser, EStep
+
+if sys.version_info >= (3, 10):
+    from types import UnionType
+else:
+    UnionType = object()
+
 
 _T = TypeVar("_T")
 
@@ -57,7 +64,7 @@ def _new_parser(tp: Any, path: Sequence[Any], encoders: Sequence[Encoder]) -> EP
 
             return p
 
-        elif origin is Union:
+        elif origin is Union or origin is UnionType:
             ps = tuple(_new_parser(a, path=path, encoders=encoders) for a in args)
 
             def p(x: Any) -> EStep:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import MISSING, fields, is_dataclass
 from enum import Enum
 from inspect import isclass
@@ -8,7 +9,6 @@ from typing import (
     Any,
     Generic,
     Literal,
-    Mapping,
     MutableMapping,
     MutableSet,
     Sequence,

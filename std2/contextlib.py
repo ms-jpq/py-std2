@@ -8,14 +8,12 @@ _T = TypeVar("_T")
 
 class Closable(Protocol):
     @abstractmethod
-    def close(self) -> None:
-        ...
+    def close(self) -> None: ...
 
 
 class AClosable(Protocol):
     @abstractmethod
-    async def aclose(self) -> None:
-        ...
+    async def aclose(self) -> None: ...
 
 
 _T2 = TypeVar("_T2", bound=AClosable)
@@ -35,8 +33,14 @@ else:
 
     aclosing = _aclosing
 
+if sys.version_info < (3, 10):
 
-# TODO -- 3.10 has this on nullcontext
-@asynccontextmanager
-async def nullacontext(enter_result: _T) -> AsyncIterator[_T]:
-    yield enter_result
+    # TODO -- 3.10 has this on nullcontext
+    @asynccontextmanager
+    async def nullacontext(enter_result: _T) -> AsyncIterator[_T]:
+        yield enter_result
+
+else:
+    from contextlib import nullcontext
+
+    nullacontext = nullcontext

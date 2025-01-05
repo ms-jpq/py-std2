@@ -1,7 +1,8 @@
 import sys
 from abc import abstractmethod
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Protocol, TypeVar
+from sys import exit
+from typing import AsyncIterator, Iterator, Protocol, TypeVar
 
 _T = TypeVar("_T")
 
@@ -17,6 +18,13 @@ class AClosable(Protocol):
 
 
 _T2 = TypeVar("_T2", bound=AClosable)
+
+
+def keyboard_interrupt() -> Iterator[None]:
+    try:
+        yield None
+    except KeyboardInterrupt:
+        exit(130)
 
 
 if sys.version_info < (3, 10):

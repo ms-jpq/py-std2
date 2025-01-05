@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger, getLevelName
-from typing import Iterator, Mapping, Tuple
+from typing import Iterator, Mapping, Tuple, Type
 
 _LEVELS = (
     CRITICAL,
@@ -26,10 +26,13 @@ LOG_LEVELS = _gen_lvls()
 
 
 @contextmanager
-def log_exc(log: Logger, suppress: bool = False) -> Iterator[None]:
+def log_exc(
+    log: Logger, *exns: Type[BaseException], suppress: bool = False
+) -> Iterator[None]:
     try:
         yield None
-    except Exception as e:
-        log.exception("%s", e)
+    except BaseException as e:
+        if isinstance(e, exns or Exception):
+            log.exception("%s", e)
         if not suppress:
             raise

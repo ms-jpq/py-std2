@@ -21,6 +21,25 @@ _T = TypeVar("_T")
 _K = TypeVar("_K")
 _V = TypeVar("_V")
 
+if sys.version_info < (3, 10):
+
+    def pairwise(it: Iterable[_T]) -> Iterator[Tuple[_T, _T]]:
+        i = iter(it)
+        try:
+            a = next(i)
+        except StopIteration:
+            return
+        else:
+            for b in i:
+
+                yield a, b
+                a = b
+
+else:
+    from itertools import pairwise as _pairwise
+
+    pairwise = _pairwise
+
 
 if sys.version_info < (3, 12):
 

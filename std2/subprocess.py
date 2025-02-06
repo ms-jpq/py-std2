@@ -18,11 +18,11 @@ else:
 try:
     from signal import SIGKILL
 
-    SIGDED = SIGKILL
+    SIGDED: Signals = SIGKILL
 except:
-    from signal import SIGTERM
+    from signal import Signals
 
-    SIGDED = SIGTERM
+    SIGDED = Signals.SIGTERM
 
 
 try:
